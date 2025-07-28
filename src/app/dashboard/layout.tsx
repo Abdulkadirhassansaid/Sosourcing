@@ -5,11 +5,10 @@ import * as React from 'react';
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarFooter, SidebarInset } from '@/components/ui/sidebar';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import { BarChart, Bell, Home, LogOut, MessageSquare, Package, Search, Settings, Truck, User, LifeBuoy, X, Wallet2, Check } from 'lucide-react';
 import { doc, getDoc, collection, onSnapshot, query, where } from 'firebase/firestore';
 import Link from 'next/link';
@@ -20,59 +19,10 @@ import { Sheet, SheetClose, SheetContent } from '@/components/ui/sheet';
 import { useNotifications, Notification } from '@/hooks/use-notifications';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { formatDistanceToNow } from 'date-fns';
-import { ShepherdTour, ShepherdTourContext } from 'react-shepherd';
-import 'shepherd.js/dist/css/shepherd.css';
+import { TourProvider } from './tour-provider';
 
 
 const ADMIN_EMAIL = "mahir@gmail.com";
-
-const tourSteps = [
-    {
-        id: 'welcome',
-        attachTo: { element: '#tour-step-1', on: 'right' as const },
-        text: 'Welcome to your Dashboard! This is your main hub for everything.',
-        buttons: [ { text: 'Next', action() { return this.next()} } ]
-    },
-    {
-        id: 'orders',
-        attachTo: { element: '#tour-step-2', on: 'right' as const },
-        text: 'Here you can view and manage all of your past and current orders.',
-        buttons: [ { text: 'Back', action() { return this.back()} }, { text: 'Next', action() { return this.next()} } ]
-    },
-    {
-        id: 'create-order',
-        attachTo: { element: '#tour-step-3', on: 'bottom' as const },
-        text: 'Ready to source a new product? Click here to create a new order request.',
-        buttons: [ { text: 'Back', action() { return this.back()} }, { text: 'Next', action() { return this.next()} } ]
-    },
-    {
-        id: 'recent-orders',
-        attachTo: { element: '#tour-step-4', on: 'top' as const },
-        text: 'Your most recent orders will appear here for quick access.',
-        buttons: [ { text: 'Back', action() { return this.back()} }, { text: 'Finish', action() { return this.complete()} } ]
-    },
-];
-
-const tourOptions = {
-  defaultStepOptions: {
-    cancelIcon: {
-      enabled: true,
-    },
-  },
-  useModalOverlay: true,
-};
-
-function TourInstance({ run }: { run: boolean }) {
-    const tour = React.useContext(ShepherdTourContext);
-
-    React.useEffect(() => {
-        if (run && tour) {
-            tour.start();
-        }
-    }, [run, tour]);
-
-    return null;
-}
 
 export default function DashboardLayout({
   children,
@@ -84,20 +34,9 @@ export default function DashboardLayout({
   const [userEmail, setUserEmail] = React.useState('');
   const [avatarUrl, setAvatarUrl] = React.useState('');
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { orders } = useOrders();
   const [unreadConversations, setUnreadConversations] = React.useState(0);
   
-  const [isTourOpen, setIsTourOpen] = React.useState(false);
-
-  React.useEffect(() => {
-    if (searchParams.get('tour') === 'true') {
-      // Use a small timeout to ensure the DOM is ready for the tour
-      setTimeout(() => setIsTourOpen(true), 500);
-      router.replace('/dashboard', { scroll: false });
-    }
-  }, [searchParams, router]);
-
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
@@ -155,8 +94,8 @@ export default function DashboardLayout({
   }
 
   return (
-    <ShepherdTour steps={tourSteps} tourOptions={tourOptions}>
-        <TourInstance run={isTourOpen} />
+    <React.Suspense fallback={<div className="flex h-screen w-full items-center justify-center"><p>Loading Dashboard...</p></div>}>
+      <TourProvider>
         <SidebarProvider>
             <Sidebar>
                 <SidebarHeader>
@@ -207,7 +146,8 @@ export default function DashboardLayout({
                 </main>
             </SidebarInset>
         </SidebarProvider>
-    </ShepherdTour>
+    </TourProvider>
+    </React.Suspense>
   )
 }
 
