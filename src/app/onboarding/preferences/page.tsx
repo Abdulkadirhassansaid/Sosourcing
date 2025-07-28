@@ -14,7 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
-import { Building, Home, Shirt, Smartphone } from 'lucide-react';
+import { Building, Home, Shirt, Smartphone, CheckCircle } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
@@ -111,15 +111,28 @@ export default function PreferencesPage() {
                 <FormField control={form.control} name="productCategories" render={() => (
                   <FormItem>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {categories.map(category => (
-                        <Card key={category.id} onClick={() => toggleCategory(category.id)} className={cn('cursor-pointer transition-all hover:shadow-md', form.watch('productCategories').includes(category.id) && 'ring-2 ring-primary')}>
-                          <CardContent className="p-4 flex flex-col items-center text-center gap-2">
-                            <Image src={category.image} width={400} height={300} alt={category.label} className="rounded-md mb-2 aspect-[4/3] object-cover" data-ai-hint={category.hint} />
-                            <category.icon className="w-8 h-8 text-primary" />
-                            <p className="font-semibold">{category.label}</p>
+                      {categories.map(category => {
+                        const isSelected = form.watch('productCategories').includes(category.id);
+                        return (
+                        <Card key={category.id} onClick={() => toggleCategory(category.id)} className={cn('cursor-pointer transition-all hover:shadow-md relative overflow-hidden', isSelected && 'ring-2 ring-primary border-primary')}>
+                           {isSelected && (
+                              <div className="absolute top-2 right-2 z-10 bg-primary text-primary-foreground rounded-full p-1">
+                                <CheckCircle className="w-5 h-5" />
+                              </div>
+                            )}
+                          <CardContent className="p-0 flex flex-col items-center text-center">
+                            <div className="relative w-full aspect-[4/3]">
+                                <Image src={category.image} alt={category.label} className={cn('object-cover transition-transform duration-300', isSelected && 'scale-110')} fill data-ai-hint={category.hint} />
+                                <div className={cn("absolute inset-0 bg-black/20 transition-opacity", isSelected && "bg-black/40")}></div>
+                            </div>
+                            <div className="p-4 flex items-center gap-3">
+                                <category.icon className="w-8 h-8 text-primary" />
+                                <p className="font-semibold text-lg">{category.label}</p>
+                            </div>
                           </CardContent>
                         </Card>
-                      ))}
+                        )
+                      })}
                     </div>
                     <FormMessage className="text-center pt-2" />
                   </FormItem>

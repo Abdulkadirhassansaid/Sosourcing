@@ -69,7 +69,7 @@ export default function OnboardingPage() {
         <div className="max-w-4xl mx-auto">
           <div className="relative w-full h-64 md:h-80 mb-8">
             <Image
-              src="https://images.unsplash.com/photo-1577561824128-5356958514a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxnbG9iYWwlMjB0cmFkZXxlbnwwfHx8fDE3NTM1OTQ5MDV8MA&ixlib=rb-4.1.0&q=80&w=1080"
+              src="https://images.unsplash.com/photo-1521295121783-8a321d551ad2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxnbG9iYWwlMjB0cmFkZSUyMHxlbnwwfHx8fDE3NTM3MTI4NTV8MA&ixlib=rb-4.1.0&q=80&w=1080"
               alt="Global Trade Illustration"
               data-ai-hint="global trade"
               fill

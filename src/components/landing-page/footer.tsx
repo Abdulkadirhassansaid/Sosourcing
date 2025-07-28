@@ -4,20 +4,11 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Facebook, Twitter, Linkedin } from "lucide-react";
-
-const content = {
-    about: "SomImports is your trusted partner for sourcing high-quality products for your business in Somalia. We handle everything from finding suppliers to final delivery.",
-    newsletter: "Subscribe to our newsletter",
-    subscribe: "Subscribe",
-    links: "Quick Links",
-    contact: "Contact Us",
-    home: "Home",
-    services: "Services",
-    aboutUs: "About Us",
-    rights: "All rights reserved.",
-};
+import { useLanguage } from "@/contexts/language-context";
 
 export default function Footer() {
+  const { content } = useLanguage();
+
   return (
     <footer className="bg-white/50 text-secondary-foreground pt-12 mt-16">
       <div className="container mx-auto px-4 md:px-6">
@@ -35,22 +26,22 @@ export default function Footer() {
                 </svg>
               <span className="ml-2 text-xl font-bold">SomImports</span>
             </div>
-            <p className="text-muted-foreground max-w-md">{content.about}</p>
+            <p className="text-muted-foreground max-w-md">{content.footer.about}</p>
           </div>
           <div>
-            <h3 className="font-semibold mb-4">{content.links}</h3>
+            <h3 className="font-semibold mb-4">{content.footer.links}</h3>
             <ul className="space-y-2">
-              <li><a href="#" className="text-muted-foreground hover:text-primary">{content.home}</a></li>
-              <li><a href="#how-it-works" className="text-muted-foreground hover:text-primary">{content.services}</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary">{content.aboutUs}</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary">{content.contact}</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary">{content.footer.home}</a></li>
+              <li><a href="#how-it-works" className="text-muted-foreground hover:text-primary">{content.footer.services}</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary">{content.footer.aboutUs}</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary">{content.footer.contact}</a></li>
             </ul>
           </div>
           <div>
-            <h3 className="font-semibold mb-4">{content.newsletter}</h3>
+            <h3 className="font-semibold mb-4">{content.footer.newsletter}</h3>
             <div className="flex w-full max-w-sm items-center space-x-2">
               <Input type="email" placeholder="Email" />
-              <Button type="submit" variant="default">{content.subscribe}</Button>
+              <Button type="submit" variant="default">{content.footer.subscribe}</Button>
             </div>
             <div className="flex space-x-4 mt-4">
               <a href="#" className="text-muted-foreground hover:text-primary"><Facebook /></a>
@@ -60,7 +51,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-8 py-4 border-t border-border/50 text-center text-sm text-muted-foreground">
-          &copy; {new Date().getFullYear()} SomImports. {content.rights}
+          &copy; {new Date().getFullYear()} SomImports. {content.footer.rights}
         </div>
       </div>
     </footer>

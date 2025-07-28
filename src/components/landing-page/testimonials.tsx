@@ -4,45 +4,17 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-const content = {
-    title: "Success Stories from Our Partners",
-    testimonials: [
-      {
-        name: "Amina Hassan",
-        role: "Boutique Owner, Mogadishu",
-        quote: "SomImports transformed my fashion business. I can now source high-quality apparel from Turkey at prices I couldn't find on my own. Their team is professional and handles everything!",
-        avatar: "AH",
-        image: "https://placehold.co/100x100.png",
-        dataAiHint: "woman portrait"
-      },
-      {
-        name: "Omar Yusuf",
-        role: "Electronics Retailer, Hargeisa",
-        quote: "The quality assurance is top-notch. I used to worry about receiving faulty electronics from China, but with SomImports, every shipment is perfect. My customers are happier than ever.",
-        avatar: "OY",
-        image: "https://placehold.co/100x100.png",
-        dataAiHint: "man portrait"
-      },
-      {
-        name: "Fatima Ali",
-        role: "Building Materials Supplier, Kismayo",
-        quote: "Finding reliable suppliers for construction materials was a huge challenge. SomImports connected me with great vendors and negotiated incredible prices. They are a true partner for growth.",
-        avatar: "FA",
-        image: "https://placehold.co/100x100.png",
-        dataAiHint: "woman smiling"
-      },
-    ],
-};
+import { useLanguage } from "@/contexts/language-context";
 
 export default function Testimonials() {
-  const testimonials = content.testimonials;
+  const { content } = useLanguage();
+  const testimonials = content.testimonials.list;
 
   return (
     <section className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{content.title}</h2>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{content.testimonials.title}</h2>
         </div>
         <Carousel
           opts={{

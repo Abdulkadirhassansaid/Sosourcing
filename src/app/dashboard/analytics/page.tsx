@@ -114,7 +114,7 @@ export default function AnalyticsPage() {
         </Card>
       ) : (
         <>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <Card className="border-l-4 border-blue-500">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Total Spending</CardTitle>
@@ -175,8 +175,8 @@ export default function AnalyticsPage() {
                 </CardContent>
             </Card>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
-                <Card className="lg:col-span-3">
+            <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-5">
+                <Card className="xl:col-span-3">
                     <CardHeader>
                         <CardTitle>Spending by Category</CardTitle>
                         <CardDescription>Breakdown of your spending across different product categories.</CardDescription>
@@ -197,7 +197,7 @@ export default function AnalyticsPage() {
                         </ChartContainer>
                     </CardContent>
                 </Card>
-                <Card className="lg:col-span-2">
+                <Card className="xl:col-span-2">
                     <CardHeader>
                         <CardTitle>Order Status Overview</CardTitle>
                         <CardDescription>Current distribution of all your orders by status.</CardDescription>
@@ -221,5 +221,3 @@ export default function AnalyticsPage() {
     </div>
   );
 }
-
-    

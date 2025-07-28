@@ -9,7 +9,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircle, ArrowRight } from 'lucide-react';
+import { CheckCircle, ArrowRight, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -61,18 +61,22 @@ export default function OnboardingCompletePage() {
           <CardHeader className="pt-8">
             <CardTitle className="text-3xl font-bold">You're All Set, {userName.split(' ')[0]}!</CardTitle>
             <CardDescription className="text-lg text-muted-foreground pt-2">
-                Your SomImports profile is ready. You can now explore your dashboard, request quotes, and manage your imports all in one place.
+                Your SomImports profile is ready. Take a quick tour to see how everything works.
             </CardDescription>
           </CardHeader>
           <CardContent className="p-6">
-            <Button size="lg" asChild className="bg-gradient-to-r from-primary to-accent text-white group">
-                <Link href="/dashboard">
-                    Go to Your Dashboard <ArrowRight className="ml-2 transition-transform group-hover:translate-x-1" />
-                </Link>
-            </Button>
-            <p className="text-sm text-muted-foreground mt-6">
-                Need to make changes later? You can always update your profile and preferences from your account settings.
-            </p>
+            <div className="flex flex-col items-center gap-4">
+                 <Button size="lg" asChild className="bg-gradient-to-r from-primary to-accent text-white group w-full max-w-xs">
+                    <Link href="/dashboard?tour=true">
+                        <Sparkles className="mr-2 h-5 w-5" /> Take a Quick Tour
+                    </Link>
+                </Button>
+                <Button variant="link" asChild>
+                    <Link href="/dashboard">
+                        Go Straight to Dashboard <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                </Button>
+            </div>
           </CardContent>
         </Card>
       </div>

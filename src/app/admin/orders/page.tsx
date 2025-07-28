@@ -170,76 +170,76 @@ export default function AdminOrdersPage() {
           </div>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Order ID</TableHead>
-                <TableHead>Product</TableHead>
-                <TableHead>Total Value</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {orders.length > 0 ? (
-                orders.map((order) => (
-                  <TableRow key={order.id}>
-                    <TableCell className="font-medium">
-                        <Link href={`/admin/orders/${order.id}`} className="hover:underline">{order.id.substring(0, 8)}...</Link>
-                    </TableCell>
-                    <TableCell>
-                        <div className="flex items-center gap-3">
-                            <div className="relative w-12 h-12 rounded-md border overflow-hidden">
-                                {order.referenceImage ? (
-                                    <Image src={order.referenceImage} alt={order.productName} fill className="object-contain" />
-                                ) : (
-                                    <div className="w-full h-full bg-secondary flex items-center justify-center">
-                                        <Package className="w-6 h-6 text-muted-foreground" />
-                                    </div>
-                                )}
-                            </div>
-                           <div className="flex flex-col">
-                             <span className="font-medium">{order.productName}</span>
-                             <span className="text-sm text-muted-foreground">{order.category}</span>
-                           </div>
-                        </div>
-                    </TableCell>
-                     <TableCell>
-                        {order.totalAmount ? `$${order.totalAmount.toLocaleString(undefined, {minimumFractionDigits: 2})}` : 'N/A'}
-                     </TableCell>
-                    <TableCell>
-                      <Badge variant={getStatusVariant(order.status)}>
-                        {order.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right space-x-2">
-                       {order.status === 'Sourcing' ? (
-                           <CreateQuoteDialog order={order} onQuoteConfirm={(details) => handleConfirmQuote(order.id, details)} />
-                       ) : (
-                         <Button asChild variant="outline" size="sm">
-                            <Link href={`/admin/orders/${order.id}`}>View Details</Link>
-                         </Button>
-                       )}
-                    </TableCell>
+          <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Order ID</TableHead>
+                    <TableHead>Product</TableHead>
+                    <TableHead>Total Value</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={8} className="h-48 text-center">
-                     <div className="flex flex-col items-center gap-4">
-                        <Package className="h-12 w-12 text-muted-foreground" />
-                        <h3 className="text-xl font-semibold">No orders yet</h3>
-                        <p className="text-muted-foreground">When a customer creates an order, it will appear here.</p>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                </TableHeader>
+                <TableBody>
+                  {orders.length > 0 ? (
+                    orders.map((order) => (
+                      <TableRow key={order.id}>
+                        <TableCell className="font-medium">
+                            <Link href={`/admin/orders/${order.id}`} className="hover:underline">{order.id.substring(0, 8)}...</Link>
+                        </TableCell>
+                        <TableCell>
+                            <div className="flex items-center gap-3">
+                                <div className="relative w-12 h-12 rounded-md border overflow-hidden shrink-0">
+                                    {order.referenceImage ? (
+                                        <Image src={order.referenceImage} alt={order.productName} fill className="object-contain" />
+                                    ) : (
+                                        <div className="w-full h-full bg-secondary flex items-center justify-center">
+                                            <Package className="w-6 h-6 text-muted-foreground" />
+                                        </div>
+                                    )}
+                                </div>
+                               <div className="flex flex-col">
+                                 <span className="font-medium">{order.productName}</span>
+                                 <span className="text-sm text-muted-foreground">{order.category}</span>
+                               </div>
+                            </div>
+                        </TableCell>
+                         <TableCell>
+                            {order.totalAmount ? `$${order.totalAmount.toLocaleString(undefined, {minimumFractionDigits: 2})}` : 'N/A'}
+                         </TableCell>
+                        <TableCell>
+                          <Badge variant={getStatusVariant(order.status)}>
+                            {order.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right space-x-2">
+                           {order.status === 'Sourcing' ? (
+                               <CreateQuoteDialog order={order} onQuoteConfirm={(details) => handleConfirmQuote(order.id, details)} />
+                           ) : (
+                             <Button asChild variant="outline" size="sm">
+                                <Link href={`/admin/orders/${order.id}`}>View Details</Link>
+                             </Button>
+                           )}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={8} className="h-48 text-center">
+                         <div className="flex flex-col items-center gap-4">
+                            <Package className="h-12 w-12 text-muted-foreground" />
+                            <h3 className="text-xl font-semibold">No orders yet</h3>
+                            <p className="text-muted-foreground">When a customer creates an order, it will appear here.</p>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+          </div>
         </CardContent>
       </Card>
     </div>
   );
 }
-
-    

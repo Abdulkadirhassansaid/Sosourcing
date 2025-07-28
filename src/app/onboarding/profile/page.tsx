@@ -17,6 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Progress } from '@/components/ui/progress';
+import Image from 'next/image';
 
 const profileSchema = z.object({
   fullName: z.string().min(2, 'Full name is required'),
@@ -105,75 +106,88 @@ export default function BusinessProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-secondary/50 p-4 sm:p-8 flex items-center justify-center">
-        <div className="max-w-2xl mx-auto w-full">
-            <header className="mb-8">
-              <Progress value={33} className="mb-2" />
-              <p className="text-sm text-muted-foreground text-center">Step 1 of 3</p>
-            </header>
-            <Card className="shadow-lg w-full">
-                <CardHeader>
-                <CardTitle className="text-2xl font-bold text-center">Tell us about your business</CardTitle>
-                <CardDescription className="text-center">This one-time setup helps us tailor our service for you.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                        <FormField control={form.control} name="fullName" render={({ field }) => (
-                        <FormItem><FormLabel>Your Full Name</FormLabel><FormControl><Input {...field} placeholder="e.g. John Doe" /></FormControl><FormMessage /></FormItem>
-                        )} />
-                        <FormField control={form.control} name="companyName" render={({ field }) => (
-                        <FormItem><FormLabel>Company Name</FormLabel><FormControl><Input {...field} placeholder="e.g. Global Imports Inc." /></FormControl><FormMessage /></FormItem>
-                        )} />
-                        <FormField control={form.control} name="industry" render={({ field }) => (
-                            <FormItem><FormLabel>Industry</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl><SelectTrigger><SelectValue placeholder="Select industry" /></SelectTrigger></FormControl>
-                                <SelectContent>{industries.map(i => <SelectItem key={i} value={i}>{i}</SelectItem>)}</SelectContent>
-                            </Select><FormMessage />
-                            </FormItem>
-                        )} />
-                        <div className="grid md:grid-cols-2 gap-4">
-                        <FormField control={form.control} name="country" render={({ field }) => (
-                            <FormItem><FormLabel>Country</FormLabel><FormControl><Input {...field} placeholder="e.g. Somalia" /></FormControl><FormMessage /></FormItem>
-                        )} />
-                        <FormField control={form.control} name="city" render={({ field }) => (
-                            <FormItem><FormLabel>City</FormLabel><FormControl><Input {...field} placeholder="e.g. Mogadishu" /></FormControl><FormMessage /></FormItem>
-                        )} />
-                        </div>
-
-                        <Controller
-                            control={form.control}
-                            name="employeeCount"
-                            render={({ field: { onChange, value } }) => (
-                                <FormItem>
-                                    <FormLabel>
-                                        Number of Employees: <span className="text-primary font-bold">{value}</span>
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Slider
-                                            min={1}
-                                            max={500}
-                                            step={1}
-                                            value={[value]}
-                                            onValueChange={(vals) => onChange(vals[0])}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    
-                    <div className="pt-6">
-                        <Button type="submit" disabled={loading} className="w-full">
-                        {loading ? 'Saving...' : 'Save & Continue'}
-                        </Button>
-                    </div>
-                    </form>
-                </Form>
-                </CardContent>
-            </Card>
+     <div className="min-h-screen w-full relative">
+        <div className="absolute inset-0 -z-10">
+             <Image 
+                src="https://images.unsplash.com/photo-1521791136064-7986c2920216?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxidXNpbmVzcyUyMHBhcnRuZXJzaGlwfGVufDB8fHx8MTc1MzYwMTgxNnww&ixlib=rb-4.1.0&q=80&w=1080"
+                alt="Business partnership"
+                data-ai-hint="business partnership"
+                fill
+                className="object-cover"
+             />
+             <div className="absolute inset-0 bg-background/80 backdrop-blur-sm"></div>
         </div>
-    </div>
+
+        <div className="min-h-screen p-4 sm:p-8 flex items-center justify-center">
+            <div className="max-w-2xl mx-auto w-full">
+                <header className="mb-8">
+                <Progress value={33} className="mb-2" />
+                <p className="text-sm text-muted-foreground text-center">Step 1 of 3</p>
+                </header>
+                <Card className="shadow-lg w-full bg-background/80">
+                    <CardHeader>
+                    <CardTitle className="text-2xl font-bold text-center">Tell us about your business</CardTitle>
+                    <CardDescription className="text-center">This one-time setup helps us tailor our service for you.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                            <FormField control={form.control} name="fullName" render={({ field }) => (
+                            <FormItem><FormLabel>Your Full Name</FormLabel><FormControl><Input {...field} placeholder="e.g. John Doe" /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="companyName" render={({ field }) => (
+                            <FormItem><FormLabel>Company Name</FormLabel><FormControl><Input {...field} placeholder="e.g. Global Imports Inc." /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="industry" render={({ field }) => (
+                                <FormItem><FormLabel>Industry</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl><SelectTrigger><SelectValue placeholder="Select industry" /></SelectTrigger></FormControl>
+                                    <SelectContent>{industries.map(i => <SelectItem key={i} value={i}>{i}</SelectItem>)}</SelectContent>
+                                </Select><FormMessage />
+                                </FormItem>
+                            )} />
+                            <div className="grid md:grid-cols-2 gap-4">
+                            <FormField control={form.control} name="country" render={({ field }) => (
+                                <FormItem><FormLabel>Country</FormLabel><FormControl><Input {...field} placeholder="e.g. Somalia" /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="city" render={({ field }) => (
+                                <FormItem><FormLabel>City</FormLabel><FormControl><Input {...field} placeholder="e.g. Mogadishu" /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            </div>
+
+                            <Controller
+                                control={form.control}
+                                name="employeeCount"
+                                render={({ field: { onChange, value } }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Number of Employees: <span className="text-primary font-bold">{value}</span>
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Slider
+                                                min={1}
+                                                max={500}
+                                                step={1}
+                                                value={[value]}
+                                                onValueChange={(vals) => onChange(vals[0])}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        
+                        <div className="pt-6">
+                            <Button type="submit" disabled={loading} className="w-full">
+                            {loading ? 'Saving...' : 'Save & Continue'}
+                            </Button>
+                        </div>
+                        </form>
+                    </Form>
+                    </CardContent>
+                </Card>
+            </div>
+        </div>
+     </div>
   );
 }

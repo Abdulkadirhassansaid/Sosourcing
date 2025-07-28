@@ -287,7 +287,7 @@ export default function AdminAnalyticsPage() {
         </Card>
       ) : (
         <>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 border-l-4 border-blue-500 rounded-l-sm">
                         <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
@@ -353,8 +353,8 @@ export default function AdminAnalyticsPage() {
                 </CardContent>
             </Card>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
-                <Card className="lg:col-span-3">
+            <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-5">
+                <Card className="xl:col-span-3">
                     <CardHeader>
                         <CardTitle>Top Categories by Order Value</CardTitle>
                         <CardDescription>The 5 most valuable product categories.</CardDescription>
@@ -375,7 +375,7 @@ export default function AdminAnalyticsPage() {
                         </ChartContainer>
                     </CardContent>
                 </Card>
-                <Card className="lg:col-span-2">
+                <Card className="xl:col-span-2">
                     <CardHeader>
                         <CardTitle>Sourcing Country</CardTitle>
                         <CardDescription>Distribution of orders by sourcing country.</CardDescription>
@@ -399,5 +399,3 @@ export default function AdminAnalyticsPage() {
     </div>
   );
 }
-
-    

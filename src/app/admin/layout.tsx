@@ -2,7 +2,7 @@
 "use client"
 
 import * as React from 'react';
-import { SidebarProvider, Sidebar, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarFooter, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider, Sidebar, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarFooter, SidebarTrigger, SidebarInset } from '@/components/ui/sidebar';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
@@ -69,7 +69,6 @@ export default function AdminLayout({
 
   return (
     <SidebarProvider>
-      <div className="relative flex min-h-svh flex-1">
         <Sidebar>
           <SidebarHeader>
               <div className="flex items-center gap-2">
@@ -100,8 +99,8 @@ export default function AdminLayout({
           <SidebarFooter>
           </SidebarFooter>
         </Sidebar>
-        <div className="flex flex-1 flex-col md:pl-[var(--sidebar-width)]">
-            <header className="sticky top-0 z-40 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 transition-all duration-300 ease-in-out sm:px-6">
+        <SidebarInset className="min-h-screen flex-1">
+            <header className="sticky top-0 z-40 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:px-6">
                 <div className="flex items-center gap-4 md:hidden">
                     <SidebarTrigger />
                 </div>
@@ -109,11 +108,10 @@ export default function AdminLayout({
                     <AdminDropdown userEmail={user.email} onLogout={handleLogout} />
                 </div>
             </header>
-            <main className="flex-1 p-4 sm:p-6">
+            <main className="p-4 sm:p-6">
                 {children}
             </main>
-        </div>
-      </div>
+        </SidebarInset>
     </SidebarProvider>
   )
 }

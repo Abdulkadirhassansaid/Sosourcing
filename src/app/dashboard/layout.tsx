@@ -5,7 +5,7 @@ import * as React from 'react';
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarFooter, SidebarInset } from '@/components/ui/sidebar';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -20,6 +20,7 @@ import { Sheet, SheetClose, SheetContent } from '@/components/ui/sheet';
 import { useNotifications, Notification } from '@/hooks/use-notifications';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { formatDistanceToNow } from 'date-fns';
+import { DashboardTour } from '@/components/dashboard-tour';
 
 const ADMIN_EMAIL = "mahir@gmail.com";
 
@@ -33,8 +34,19 @@ export default function DashboardLayout({
   const [userEmail, setUserEmail] = React.useState('');
   const [avatarUrl, setAvatarUrl] = React.useState('');
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { orders } = useOrders();
   const [unreadConversations, setUnreadConversations] = React.useState(0);
+  
+  const [isTourOpen, setIsTourOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    if (searchParams.get('tour') === 'true') {
+      setIsTourOpen(true);
+      // Clean up URL
+      router.replace('/dashboard', { scroll: false });
+    }
+  }, [searchParams, router]);
 
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -94,7 +106,7 @@ export default function DashboardLayout({
 
   return (
     <SidebarProvider>
-      <div className="relative flex min-h-svh flex-1">
+      <DashboardTour run={isTourOpen} setRun={setIsTourOpen} />
         <Sidebar>
             <SidebarHeader>
                 <div className="flex items-center gap-2">
@@ -110,8 +122,8 @@ export default function DashboardLayout({
                 </div>
             </SidebarHeader>
             <SidebarMenu>
-                <SidebarMenuButton href="/dashboard" tooltip="Dashboard" ><Home />Dashboard</SidebarMenuButton>
-                <SidebarMenuButton href="/dashboard/orders" tooltip="Orders" >
+                <SidebarMenuButton href="/dashboard" tooltip="Dashboard" id="tour-step-1"><Home />Dashboard</SidebarMenuButton>
+                <SidebarMenuButton href="/dashboard/orders" tooltip="Orders" id="tour-step-2">
                     <Truck />Orders {orders.length > 0 && <span className="ml-auto flex h-6 w-6 items-center justify-center rounded-full bg-primary-foreground text-xs font-medium text-primary">{orders.length}</span>}
                 </SidebarMenuButton>
                 <SidebarMenuButton href="/dashboard/billing" tooltip="Billing" >
@@ -130,8 +142,8 @@ export default function DashboardLayout({
                 </SidebarMenu>
             </SidebarFooter>
         </Sidebar>
-        <div className="flex flex-1 flex-col md:pl-[var(--sidebar-width)]">
-            <header className="sticky top-0 z-40 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 transition-all duration-300 ease-in-out sm:px-6">
+        <SidebarInset className="flex-1 min-h-screen">
+            <header className="sticky top-0 z-40 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:px-6">
                 <div className="flex items-center gap-4 md:hidden">
                     <SidebarTrigger />
                 </div>
@@ -139,11 +151,10 @@ export default function DashboardLayout({
                     <UserDropdown userName={userName} userEmail={userEmail} avatarUrl={avatarUrl} onLogout={handleLogout} />
                 </div>
             </header>
-            <main className="flex-1 p-4 sm:p-6">
+            <main className="p-4 sm:p-6">
                 {children}
             </main>
-        </div>
-      </div>
+        </SidebarInset>
     </SidebarProvider>
   )
 }

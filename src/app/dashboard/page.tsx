@@ -58,11 +58,11 @@ export default function DashboardPage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <h1 className="text-3xl font-bold tracking-tight">Salaam, {userName}!</h1>
             <div className="flex items-center space-x-2 w-full sm:w-auto">
-                <Button asChild className="w-full sm:w-auto"><Link href="/dashboard/orders/new"><PlusCircle className="mr-2 h-4 w-4" /> Create New Order</Link></Button>
+                <Button asChild className="w-full sm:w-auto" id="tour-step-3"><Link href="/dashboard/orders/new"><PlusCircle className="mr-2 h-4 w-4" /> Create New Order</Link></Button>
             </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             <Card className="border-l-4 border-blue-500">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Pending Orders</CardTitle>
@@ -95,7 +95,7 @@ export default function DashboardPage() {
             </Card>
         </div>
         
-        <Card>
+        <Card id="tour-step-4">
             <CardHeader>
                 <CardTitle>Recent Orders</CardTitle>
                 <CardDescription>Here's a quick look at your latest orders.</CardDescription>

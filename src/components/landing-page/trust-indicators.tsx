@@ -1,13 +1,12 @@
 
 "use client";
 
-const indicators = [
-    { value: "1,000+", label: "Products Sourced" },
-    { value: "500+", label: "Happy Customers" },
-    { value: "2", label: "Key Sourcing Markets" },
-];
+import { useLanguage } from "@/contexts/language-context";
 
 export default function TrustIndicators() {
+  const { content } = useLanguage();
+  const indicators = content.trust.indicators;
+
   return (
     <section className="py-12 bg-background">
       <div className="container mx-auto px-4 md:px-6">

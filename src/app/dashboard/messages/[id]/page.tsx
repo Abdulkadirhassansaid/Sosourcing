@@ -97,8 +97,8 @@ export default function MessageDetailsPage() {
     }
     
     return (
-        <div className="flex flex-col h-[calc(100svh-var(--header-height,6rem))] md:h-[calc(100svh-var(--header-height,4rem))]">
-             <header className="flex items-center gap-4 border-b p-4">
+        <div className="flex flex-col h-[calc(100svh-var(--header-height,6rem))] md:h-[calc(100vh-var(--header-height,4rem))]">
+             <header className="flex items-center gap-4 border-b p-4 shrink-0">
                 <Button variant="outline" size="icon" onClick={() => router.back()}>
                     <ArrowLeft className="h-4 w-4" />
                     <span className="sr-only">Go Back</span>
@@ -111,7 +111,7 @@ export default function MessageDetailsPage() {
                     </p>
                 </div>
                  <Link href={`/dashboard/orders/${order.id}`}>
-                    <Button variant="outline">View Order</Button>
+                    <Button variant="outline" className="shrink-0">View Order</Button>
                 </Link>
             </header>
 
