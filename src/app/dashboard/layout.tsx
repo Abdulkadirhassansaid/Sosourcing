@@ -21,8 +21,59 @@ import { useNotifications, Notification } from '@/hooks/use-notifications';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { formatDistanceToNow } from 'date-fns';
 import { DashboardTour } from '@/components/dashboard-tour';
+import { ShepherdTour, ShepherdTourContext } from 'react-shepherd';
+import 'shepherd.js/dist/css/shepherd.css';
+
 
 const ADMIN_EMAIL = "mahir@gmail.com";
+
+const tourSteps = [
+    {
+        id: 'welcome',
+        attachTo: { element: '#tour-step-1', on: 'right' as const },
+        text: 'Welcome to your Dashboard! This is your main hub for everything.',
+        buttons: [ { text: 'Next', action() { return this.next()} } ]
+    },
+    {
+        id: 'orders',
+        attachTo: { element: '#tour-step-2', on: 'right' as const },
+        text: 'Here you can view and manage all of your past and current orders.',
+        buttons: [ { text: 'Back', action() { return this.back()} }, { text: 'Next', action() { return this.next()} } ]
+    },
+    {
+        id: 'create-order',
+        attachTo: { element: '#tour-step-3', on: 'bottom' as const },
+        text: 'Ready to source a new product? Click here to create a new order request.',
+        buttons: [ { text: 'Back', action() { return this.back()} }, { text: 'Next', action() { return this.next()} } ]
+    },
+    {
+        id: 'recent-orders',
+        attachTo: { element: '#tour-step-4', on: 'top' as const },
+        text: 'Your most recent orders will appear here for quick access.',
+        buttons: [ { text: 'Back', action() { return this.back()} }, { text: 'Finish', action() { return this.complete()} } ]
+    },
+];
+
+const tourOptions = {
+  defaultStepOptions: {
+    cancelIcon: {
+      enabled: true,
+    },
+  },
+  useModalOverlay: true,
+};
+
+function TourInstance({ run }: { run: boolean }) {
+    const tour = React.useContext(ShepherdTourContext);
+
+    React.useEffect(() => {
+        if (run && tour) {
+            tour.start();
+        }
+    }, [run, tour]);
+
+    return null;
+}
 
 export default function DashboardLayout({
   children,
@@ -42,8 +93,8 @@ export default function DashboardLayout({
 
   React.useEffect(() => {
     if (searchParams.get('tour') === 'true') {
-      setIsTourOpen(true);
-      // Clean up URL
+      // Use a small timeout to ensure the DOM is ready for the tour
+      setTimeout(() => setIsTourOpen(true), 500);
       router.replace('/dashboard', { scroll: false });
     }
   }, [searchParams, router]);
@@ -105,57 +156,59 @@ export default function DashboardLayout({
   }
 
   return (
-    <SidebarProvider>
-      <DashboardTour run={isTourOpen} setRun={setIsTourOpen} />
-        <Sidebar>
-            <SidebarHeader>
-                <div className="flex items-center gap-2">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="h-6 w-6 text-primary"
-                        >
-                        <path d="M12 2L1 9l4 1v9h3v-6h4v6h3v-9l4-1-11-7z" />
-                    </svg>
-                    <span className="text-lg font-semibold">SomImports</span>
-                </div>
-            </SidebarHeader>
-            <SidebarMenu>
-                <SidebarMenuButton href="/dashboard" tooltip="Dashboard" id="tour-step-1"><Home />Dashboard</SidebarMenuButton>
-                <SidebarMenuButton href="/dashboard/orders" tooltip="Orders" id="tour-step-2">
-                    <Truck />Orders {orders.length > 0 && <span className="ml-auto flex h-6 w-6 items-center justify-center rounded-full bg-primary-foreground text-xs font-medium text-primary">{orders.length}</span>}
-                </SidebarMenuButton>
-                <SidebarMenuButton href="/dashboard/billing" tooltip="Billing" >
-                    <Wallet2 />Billing
-                </SidebarMenuButton>
-                <SidebarMenuButton href="/dashboard/messages" tooltip="Messages" >
-                    <MessageSquare />Messages {unreadConversations > 0 && <span className="ml-auto flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-medium">{unreadConversations}</span>}
-                </SidebarMenuButton>
-                <SidebarMenuButton href="/dashboard/analytics" tooltip="Analytics"><BarChart />Analytics</SidebarMenuButton>
-            </SidebarMenu>
-            <SidebarFooter>
+    <ShepherdTour steps={tourSteps} tourOptions={tourOptions}>
+        <TourInstance run={isTourOpen} />
+        <SidebarProvider>
+            <Sidebar>
+                <SidebarHeader>
+                    <div className="flex items-center gap-2">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            className="h-6 w-6 text-primary"
+                            >
+                            <path d="M12 2L1 9l4 1v9h3v-6h4v6h3v-9l4-1-11-7z" />
+                        </svg>
+                        <span className="text-lg font-semibold">SomImports</span>
+                    </div>
+                </SidebarHeader>
                 <SidebarMenu>
-                      <SidebarMenuButton href="/dashboard/settings" tooltip="Settings"><Settings />Settings</SidebarMenuButton>
-                      <SidebarMenuButton href="/dashboard/help" tooltip="Help"><LifeBuoy />Help Center</SidebarMenuButton>
-                      <SidebarMenuButton onClick={handleLogout} tooltip="Logout" className="text-destructive hover:bg-destructive/10 focus:bg-destructive/10 focus:text-destructive"><LogOut />Logout</SidebarMenuButton>
+                    <SidebarMenuButton href="/dashboard" tooltip="Dashboard" id="tour-step-1"><Home />Dashboard</SidebarMenuButton>
+                    <SidebarMenuButton href="/dashboard/orders" tooltip="Orders" id="tour-step-2">
+                        <Truck />Orders {orders.length > 0 && <span className="ml-auto flex h-6 w-6 items-center justify-center rounded-full bg-primary-foreground text-xs font-medium text-primary">{orders.length}</span>}
+                    </SidebarMenuButton>
+                    <SidebarMenuButton href="/dashboard/billing" tooltip="Billing" >
+                        <Wallet2 />Billing
+                    </SidebarMenuButton>
+                    <SidebarMenuButton href="/dashboard/messages" tooltip="Messages" >
+                        <MessageSquare />Messages {unreadConversations > 0 && <span className="ml-auto flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-medium">{unreadConversations}</span>}
+                    </SidebarMenuButton>
+                    <SidebarMenuButton href="/dashboard/analytics" tooltip="Analytics"><BarChart />Analytics</SidebarMenuButton>
                 </SidebarMenu>
-            </SidebarFooter>
-        </Sidebar>
-        <SidebarInset className="flex-1 min-h-screen">
-            <header className="sticky top-0 z-40 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:px-6">
-                <div className="flex items-center gap-4 md:hidden">
-                    <SidebarTrigger />
-                </div>
-                <div className="flex flex-1 items-center justify-end space-x-2">
-                    <UserDropdown userName={userName} userEmail={userEmail} avatarUrl={avatarUrl} onLogout={handleLogout} />
-                </div>
-            </header>
-            <main className="p-4 sm:p-6">
-                {children}
-            </main>
-        </SidebarInset>
-    </SidebarProvider>
+                <SidebarFooter>
+                    <SidebarMenu>
+                        <SidebarMenuButton href="/dashboard/settings" tooltip="Settings"><Settings />Settings</SidebarMenuButton>
+                        <SidebarMenuButton href="/dashboard/help" tooltip="Help"><LifeBuoy />Help Center</SidebarMenuButton>
+                        <SidebarMenuButton onClick={handleLogout} tooltip="Logout" className="text-destructive hover:bg-destructive/10 focus:bg-destructive/10 focus:text-destructive"><LogOut />Logout</SidebarMenuButton>
+                    </SidebarMenu>
+                </SidebarFooter>
+            </Sidebar>
+            <SidebarInset className="flex-1 min-h-screen">
+                <header className="sticky top-0 z-40 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:px-6">
+                    <div className="flex items-center gap-4 md:hidden">
+                        <SidebarTrigger />
+                    </div>
+                    <div className="flex flex-1 items-center justify-end space-x-2">
+                        <UserDropdown userName={userName} userEmail={userEmail} avatarUrl={avatarUrl} onLogout={handleLogout} />
+                    </div>
+                </header>
+                <main className="p-4 sm:p-6">
+                    {children}
+                </main>
+            </SidebarInset>
+        </SidebarProvider>
+    </ShepherdTour>
   )
 }
 
