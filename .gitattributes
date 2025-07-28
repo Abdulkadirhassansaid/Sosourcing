@@ -1,0 +1,3 @@
+# Set default behavior to normalize all text files to LF line endings.
+# This prevents the "LF will be replaced by CRLF" warning on Windows.
+* text=auto eol=lf
