@@ -2,10 +2,13 @@
 "use client";
 
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { MoveRight } from "lucide-react";
 import Link from "next/link";
 import { auth, db } from "@/lib/firebase";
@@ -16,25 +19,37 @@ import { doc, getDoc } from "firebase/firestore";
 
 const ADMIN_EMAIL = "mahir@gmail.com";
 
+const formSchema = z.object({
+  email: z.string().email({ message: "Please enter a valid email address." }),
+  password: z.string().min(1, { message: "Password is required." }),
+});
+
+type FormData = z.infer<typeof formSchema>;
+
 export default function LoginPage() {
   const { toast } = useToast();
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-  const handleLogin = async () => {
+  const handleLogin = async (data: FormData) => {
     setLoading(true);
     try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
         const user = userCredential.user;
 
-        // Check if user is blocked (but not for admin)
         if (user.email !== ADMIN_EMAIL) {
             const userDocRef = doc(db, 'users', user.uid);
             const userDocSnap = await getDoc(userDocRef);
             if (userDocSnap.exists() && userDocSnap.data().isBlocked) {
-                await auth.signOut(); // Sign out the blocked user
+                await auth.signOut();
                 toast({
                     variant: "destructive",
                     title: "Account Blocked",
@@ -100,23 +115,45 @@ export default function LoginPage() {
             <CardTitle className="text-2xl font-bold">Welcome Back!</CardTitle>
             <CardDescription>Sign in to continue to SomImports.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-            <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
-            </div>
-            <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                <Link href="#" className="text-sm underline">
-                    Forgot password?
-                </Link>
-                </div>
-                <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleLogin()} />
-            </div>
-            <Button onClick={handleLogin} type="submit" className="w-full bg-accent hover:bg-accent/90 text-white group" disabled={loading}>
-                {loading ? "Signing In..." : 'Sign In'} <MoveRight className="ml-2 transition-transform group-hover:translate-x-1" />
-            </Button>
+            <CardContent>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(handleLogin)} className="space-y-4">
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input type="email" placeholder="m@example.com" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <div className="flex items-center justify-between">
+                                        <FormLabel>Password</FormLabel>
+                                        <Link href="#" className="text-sm underline">
+                                            Forgot password?
+                                        </Link>
+                                    </div>
+                                    <FormControl>
+                                        <Input type="password" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-white group" disabled={loading}>
+                            {loading ? "Signing In..." : 'Sign In'} <MoveRight className="ml-2 transition-transform group-hover:translate-x-1" />
+                        </Button>
+                    </form>
+                </Form>
             </CardContent>
             <CardFooter className="flex justify-center text-center text-sm">
                 <p>Don't have an account? <Link href="/signup" className="underline font-semibold">Sign Up</Link></p>
