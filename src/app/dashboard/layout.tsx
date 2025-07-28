@@ -20,7 +20,6 @@ import { Sheet, SheetClose, SheetContent } from '@/components/ui/sheet';
 import { useNotifications, Notification } from '@/hooks/use-notifications';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { formatDistanceToNow } from 'date-fns';
-import { DashboardTour } from '@/components/dashboard-tour';
 import { ShepherdTour, ShepherdTourContext } from 'react-shepherd';
 import 'shepherd.js/dist/css/shepherd.css';
 
